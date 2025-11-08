@@ -1,0 +1,11 @@
+query GET_TOKENS($where: TokenWhere, $first: Int!, $skip: Int!) {
+  tokens(where: $where, first: $first, skip: $skip) {
+    address
+    chainId
+    decimals
+    name
+    symbol
+    logoUri
+    usdPrice 
+  }
+}

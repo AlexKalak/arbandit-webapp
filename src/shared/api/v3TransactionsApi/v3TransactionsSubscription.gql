@@ -1,0 +1,13 @@
+subscription V3TransactionsSubscription($poolAddress: String!, $chainId: Int!) {
+  transactionAdded(poolAddress: $poolAddress, chainId: $chainId) {
+      id
+      chainId
+      poolAddress
+      amount0
+      amount1
+      archiveToken0UsdPrice
+      archiveToken1UsdPrice
+      txHash
+      blockNumber
+  }
+}
