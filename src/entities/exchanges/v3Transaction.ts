@@ -15,6 +15,8 @@ export type V3TransactionModel = {
 
   txHash: string | null;
 
+  txTimestamp: number | null;
+
   blockNumber: number | null;
 
   amount0: number | null;

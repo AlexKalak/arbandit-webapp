@@ -8,6 +8,7 @@ subscription V3TransactionsSubscription($poolAddress: String!, $chainId: Int!) {
       archiveToken0UsdPrice
       archiveToken1UsdPrice
       txHash
+      txTimestamp
       blockNumber
   }
 }

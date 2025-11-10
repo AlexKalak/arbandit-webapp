@@ -8,6 +8,7 @@ query V3TransactionsQuery($fromHead: Boolean, $first: Int, $skip: Int, $where: V
       archiveToken0UsdPrice
       archiveToken1UsdPrice
       txHash
+      txTimestamp
       blockNumber
   }
 }

@@ -1,5 +1,6 @@
 import { TokenModel } from "@/src/entities/exchanges/token"
 import { V3TransactionModel } from "@/src/entities/exchanges/v3Transaction"
+import { getDateTimeFromDate } from "@/src/shared/helpers/time"
 
 const V3PoolTransaction = (
   {
@@ -20,8 +21,16 @@ const V3PoolTransaction = (
   const token0RealAmount = transaction.amount0 / Math.pow(10, token0.decimals)
   const token1RealAmount = transaction.amount1 / Math.pow(10, token1.decimals)
 
+  const transactionTime = new Date()
+  if (transaction.txTimestamp) {
+    transactionTime.setTime(transaction.txTimestamp * 1000)
+  }
+
+  const transactionString = transaction.txTimestamp ? getDateTimeFromDate(transactionTime) : "no timestamp"
+
   return <div className="grid grid-cols-6 text-right px-20">
     <h1>{transaction.blockNumber}</h1>
+    <h1>{transactionString}</h1>
     <h1>
       {
         zfo ?
