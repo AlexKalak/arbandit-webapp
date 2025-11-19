@@ -17,13 +17,9 @@ export class V3PoolWhere {
 }
 
 
-type GetPoolRespType = {
-  v3pools: V3PoolModel[]
-}
 
 
 export const V3PoolsApi = {
-
   async getPools(
     amount: number = 100,
     skip: number = 0,

@@ -1,10 +1,25 @@
-import { TokenModel } from "@/src/entities/exchanges/token";
+import { TokenData, TokenModel } from "@/src/entities/exchanges/token";
 import { useQuery } from "@apollo/client/react";
-import GET_TOKENS from "../tokensQuery.gql"
-import { TokensWhere } from "../tokensApi";
+import GET_TOKENS from "../gql/tokensQuery.gql"
 
-type TokenData = {
-  tokens: TokenModel[],
+type TokensWhere = {
+  chainId?: number;
+
+  decimals?: number;
+
+  name?: string;
+
+  symbol?: string;
+
+  address?: string;
+
+  logoUri?: string;
+
+  usdPrice?: string;
+}
+
+type TokenQueryData = {
+  tokens: TokenData[],
 }
 
 export const useGetTokenByAddressAndChainID = (tokenAddress: string, chainID: number, pollInterval?: number): {
@@ -17,18 +32,35 @@ export const useGetTokenByAddressAndChainID = (tokenAddress: string, chainID: nu
     chainId: chainID,
   }
 
-  const { data: rawData, error, loading } = useQuery<TokenData>(GET_TOKENS, {
+  const { data: rawData, error, loading } = useQuery<TokenQueryData>(GET_TOKENS, {
     variables: { first: 1, skip: 0, where: where },
     pollInterval: pollInterval
   });
 
 
-  const firstToken = rawData?.tokens?.[0] ?? null
+  const firstTokenData = rawData?.tokens?.[0] ?? null
+  if (!firstTokenData) {
+    return {
+      token: null,
+      isLoading: loading,
+      error: error?.message ?? ""
+    }
+  }
 
+  try {
+    const tokenModel = new TokenModel(firstTokenData, { useDefaultValues: true })
+    return {
+      token: tokenModel,
+      isLoading: loading,
+      error: error?.message ?? ""
+    }
+  } catch {
+    return {
+      token: null,
+      isLoading: loading,
+      error: "unable to contruct tokenModel from tokenData",
 
-  return {
-    token: firstToken,
-    isLoading: loading,
-    error: error ? error.message : null,
+    }
+
   }
 }

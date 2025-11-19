@@ -1,8 +1,26 @@
 'use client'
-import { AreaData, AreaSeries, CandlestickData, CandlestickSeries, ColorType, createChart, IChartApi, ISeriesApi, Time } from 'lightweight-charts'
+import { CandleModel } from '@/src/entities/exchanges/candle';
+import { CandlestickData, CandlestickSeries, ColorType, createChart, IChartApi, ISeriesApi, Time, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useRef, useState } from 'react';
 
+function candleModelToCandleStickData(candle: CandleModel): CandlestickData<Time> {
+  return {
+    time: candle.timestamp as UTCTimestamp,
+    open: candle.open,
+    close: candle.close,
+    low: candle.close,
+    high: candle.high,
+  }
 
+}
+function candleModelsArrayToData(candles: CandleModel[]): CandlestickData<Time>[] {
+  const result: CandlestickData<Time>[] = []
+  for (const candle of candles) {
+    result.push(candleModelToCandleStickData(candle))
+  }
+
+  return result
+}
 
 interface ChartComponentColor {
   backgroundColor: string
@@ -13,12 +31,13 @@ interface ChartComponentColor {
 }
 
 interface ChartComponentProps {
-  data: CandlestickData<Time>[],
-  updatedCandle: CandlestickData<Time>,
+  chartForToken: number,
+  candles: CandleModel[],
+  updatingCandle: CandleModel | null,
   colors?: ChartComponentColor
 }
 
-export const V3PoolTransactionsChart = ({ data, updatedCandle, colors }: ChartComponentProps) => {
+export const V3PoolSwapsChart = ({ chartForToken, candles, updatingCandle, colors }: ChartComponentProps) => {
   const {
     backgroundColor = 'black',
     lineColor = '#2962FF',
@@ -28,7 +47,9 @@ export const V3PoolTransactionsChart = ({ data, updatedCandle, colors }: ChartCo
   } = {}
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [series, setSeries] = useState<ISeriesApi<"Candlestick">>()
+  const seriesRef = useRef<ISeriesApi<"Candlestick">>(null)
+
+  const [chart, setChart] = useState<IChartApi>()
 
   useEffect(
     () => {
@@ -42,7 +63,6 @@ export const V3PoolTransactionsChart = ({ data, updatedCandle, colors }: ChartCo
 
 
       let chart: IChartApi | null = null
-      console.log("Creating")
 
       chart = createChart(chartContainerRef.current, {
         layout: {
@@ -64,9 +84,10 @@ export const V3PoolTransactionsChart = ({ data, updatedCandle, colors }: ChartCo
         width: chartContainerRef.current.clientWidth,
         height: 600,
       });
+
       chart.timeScale().fitContent();
-      const newSeries = chart.addSeries(CandlestickSeries, {});
-      setSeries(newSeries)
+      setChart(chart)
+
 
       window.addEventListener('resize', handleResize);
 
@@ -76,15 +97,37 @@ export const V3PoolTransactionsChart = ({ data, updatedCandle, colors }: ChartCo
         chart?.remove();
       };
     },
-    [setSeries, backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor]
+    [setChart, backgroundColor, lineColor, textColor, areaTopColor, areaBottomColor]
   );
 
   useEffect(() => {
+    if (!chart) {
+      return
+    }
+
+    seriesRef.current = chart.addSeries(CandlestickSeries, {});
+
+    return () => {
+      if (seriesRef.current) {
+        chart.removeSeries(seriesRef.current)
+      }
+    }
+
+  }, [chart, chartForToken])
+
+  useEffect(() => {
+    const series = seriesRef.current
     if (!series) {
       return
     }
-    series.setData(data)
-  }, [series, data])
+    if (series.data().length == 0) {
+      series.setData(candleModelsArrayToData(candles))
+    }
+
+    if (updatingCandle) {
+      series.update(candleModelToCandleStickData(updatingCandle))
+    }
+  }, [candles, updatingCandle])
 
   return (
     <div ref={chartContainerRef}>
@@ -93,4 +136,4 @@ export const V3PoolTransactionsChart = ({ data, updatedCandle, colors }: ChartCo
 
 }
 
-export default V3PoolTransactionsChart
+export default V3PoolSwapsChart

@@ -1,0 +1,14 @@
+subscription V3SwapSubscription($poolAddress: String!, $chainId: Int!) {
+  swapAdded(poolAddress: $poolAddress, chainId: $chainId) {
+      id
+      chainId
+      poolAddress
+      amount0
+      amount1
+      archiveToken0UsdPrice
+      archiveToken1UsdPrice
+      txHash
+      txTimestamp
+      blockNumber
+  }
+}

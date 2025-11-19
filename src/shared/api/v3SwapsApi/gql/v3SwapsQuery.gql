@@ -1,5 +1,5 @@
-subscription V3TransactionsSubscription($poolAddress: String!, $chainId: Int!) {
-  transactionAdded(poolAddress: $poolAddress, chainId: $chainId) {
+query V3SwapsQuery($fromHead: Boolean, $first: Int, $skip: Int, $where: V3SwapWhere) {
+  v3swaps(fromHead: $fromHead, first: $first, skip: $skip, where: $where) {
       id
       chainId
       poolAddress

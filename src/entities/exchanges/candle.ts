@@ -5,7 +5,7 @@ export type CandleData = {
   low: number,
   high: number,
   timestamp: number,
-  amountTransactions: number
+  amountSwaps: number
 
 }
 
@@ -16,7 +16,7 @@ export class CandleModel {
   low: number
   high: number
   timestamp: number
-  amountTransactions: number
+  amountSwaps: number
 
   constructor(candleData: CandleData) {
     this.uuid = candleData.uuid
@@ -25,6 +25,6 @@ export class CandleModel {
     this.low = Number(candleData.low)
     this.high = Number(candleData.high)
     this.timestamp = Number(candleData.timestamp)
-    this.amountTransactions = Number(candleData.amountTransactions)
+    this.amountSwaps = Number(candleData.amountSwaps)
   }
 }

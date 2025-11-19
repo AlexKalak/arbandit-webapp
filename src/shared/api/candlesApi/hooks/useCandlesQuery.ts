@@ -1,6 +1,6 @@
 import { CandleData, CandleModel } from "@/src/entities/exchanges/candle"
 import { useQuery } from "@apollo/client/react"
-import GET_CANDLES_QUERY from "../candlesQuery.gql"
+import GET_CANDLES_QUERY from "../gql/candlesQuery.gql"
 
 type CandlesQueryData = {
   candles: CandleData[],

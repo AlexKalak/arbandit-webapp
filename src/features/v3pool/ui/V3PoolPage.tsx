@@ -1,18 +1,15 @@
-import { V3PoolsApi } from "@/src/shared/api/v3PoolsApi/v3PoolApi"
-import { useAsyncEffect } from "@/src/utils/hooks/useAsyncEffect"
 import V3PoolInfo from "./V3PoolInfo"
-import V3PoolTransactionList from "./V3PoolTransactionList"
+import V3PoolSwapsList from "./V3PoolSwapList"
+import { useGetV3PoolQuery } from "@/src/shared/api/v3PoolsApi/hooks/v3PoolsApiHooks"
 
-const V3PoolPage = ({ address, chainId }: { address: string, chainId: number }) => {
-  const { data, isLoading, error } = useAsyncEffect(
-    () => V3PoolsApi.getPoolByAddress(
+const V3PoolPage = ({ address, chainID }: { address: string, chainID: number }) => {
+  const { pool, isLoading, error } = useGetV3PoolQuery(
+    {
       address,
-      chainId
-    ),
-    [address, chainId]
+      chainID: chainID,
+    }
   )
 
-  const pool = data?.pool
 
   if (!pool?.chainId || !pool.token0Address || !pool.token1Address) {
     return <></>
@@ -20,11 +17,11 @@ const V3PoolPage = ({ address, chainId }: { address: string, chainId: number }) 
 
   return (
     <div>
-      {data?.pool &&
+      {pool &&
         <div>
-          <V3PoolInfo pool={data.pool} />
-          <V3PoolTransactionList
-            poolAddress={pool.address}
+          <V3PoolInfo pool={pool} />
+          <V3PoolSwapsList
+            pool={pool}
             chainId={pool.chainId}
             token0Address={pool.token0Address}
             token1Address={pool.token1Address}

@@ -1,30 +1,38 @@
 query GET_V3_POOLS ($where: V3PoolWhere, $first: Int!, $skip: Int!) {
   v3pools(where: $where, first: $first, skip: $skip) {
     address
-    blockNumber
-    chainId
-    exchangeName
-    feeTier
-    isDusty
-    liquidity
-    nearTicks
-    nonZfo_10usdRate
-    sqrtPriceX96
-    tick
-    tickLower
-    tickSpacing
-    tickUpper
     token0Address
     token1Address
+    sqrtPriceX96
+    liquidity
+    tick
+    feeTier
+    chainId
+    isDusty
+
+    exchangeName
+    blockNumber
+    tickSpacing
+
+    tickLower
+    tickUpper
+   ticks 
     zfo_10usdRate
+    nonZfo_10usdRate
 
     token0 {
       address
       symbol
+      usdPrice
+      chainId
+      decimals
     }
     token1{ 
       address
+      usdPrice
       symbol
+      chainId
+      decimals
     }
   }
 }

@@ -1,0 +1,12 @@
+query Query($chainId: Int!) {
+  on_chain_arbitrages(chainId: $chainId) {
+  path {
+    tokenInAddress
+    tokenOutAddress
+    poolAddress
+     amountIn 
+    amountOut
+  }
+ }
+}
+

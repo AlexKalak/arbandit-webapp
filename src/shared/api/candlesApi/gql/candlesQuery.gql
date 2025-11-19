@@ -6,6 +6,6 @@ query Query($poolAddress: String!, $chainId: Int!, $timeSpacing: Int!, $chartFor
   low,
   high,
   timestamp,
-  amountTransactions
+  amountSwaps
  }
 }

@@ -7,5 +7,12 @@ query GET_TOKENS($where: TokenWhere, $first: Int!, $skip: Int!) {
     symbol
     logoUri
     usdPrice 
+    tokenImpacts {
+      chainId
+      exchangeIdentifier
+      impact
+      tokenAddress
+      usdPrice
+    }
   }
 }
