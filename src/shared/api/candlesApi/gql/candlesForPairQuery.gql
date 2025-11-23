@@ -1,0 +1,11 @@
+query CANDLES_FOR_PAIR($pairAddress: String!, $chainId: Int!, $timeSpacing: Int!, $chartForToken: Int!) {
+ candlesForPair(pairAddress: $pairAddress, chainId: $chainId, chartForToken: $chartForToken,timeSpacing: $timeSpacing) {
+  uuid,
+  open,
+  close,
+  low,
+  high,
+  timestamp,
+  amountSwaps
+ }
+}

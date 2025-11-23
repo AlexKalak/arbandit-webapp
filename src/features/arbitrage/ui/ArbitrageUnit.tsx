@@ -16,6 +16,9 @@ const ArbitrageUnit = ({ chainID, unit }: ArbitrageUnitProps) => {
 
   if (!pool || !tokenIn || !tokenOut) return <div>...</div>
 
+  const tokenInDecimalsPower = Math.pow(10, tokenIn.decimals)
+  const tokenOutDecimalsPower = Math.pow(10, tokenOut.decimals)
+
   const zfo = pool.token0Address === unit.tokenInAdress
   const token0 = zfo ? tokenIn : tokenOut
   const token1 = zfo ? tokenOut : tokenIn
@@ -43,11 +46,11 @@ const ArbitrageUnit = ({ chainID, unit }: ArbitrageUnitProps) => {
     </div>
     <div className="flex flex-col text-base">
       <span>{tokenIn.symbol} ({formatPrice(tokenInPrice)})$</span>
-      <span>{unit.amountIn}</span>
+      <span>{unit.amountIn / tokenInDecimalsPower}</span>
     </div>
     <div className="flex flex-col text-base">
       {tokenOut.symbol} ({formatPrice(tokenOutPrice)})$
-      <span>{unit.amountOut}</span>
+      <span>{unit.amountOut / tokenOutDecimalsPower}</span>
     </div>
   </div>
 }

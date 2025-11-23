@@ -110,6 +110,13 @@ export class TokenModel {
     this.usdPrice = tokenData.usdPrice
   }
 
+  getRealAmountOfToken = (amount: number) => {
+    if (!this.decimals) {
+      return 0;
+    }
+    return amount / Math.pow(10, this.decimals);
+  }
+
 }
 
 

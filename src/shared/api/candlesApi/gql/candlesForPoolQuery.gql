@@ -1,0 +1,11 @@
+query CANDLES_FOR_POOL($poolAddress: String!, $chainId: Int!, $timeSpacing: Int!, $chartForToken: Int!) {
+ candlesForPool(poolAddress: $poolAddress, chainId: $chainId, chartForToken: $chartForToken,timeSpacing: $timeSpacing) {
+  uuid,
+  open,
+  close,
+  low,
+  high,
+  timestamp,
+  amountSwaps
+ }
+}

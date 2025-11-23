@@ -4,8 +4,8 @@ import { useGetTokenByAddressAndChainID } from "@/src/shared/api/tokensApi/hooks
 import { generateMd5Hash } from "@/src/shared/helpers/hash"
 import V3PoolSwapsChart from "./V3PoolSwapsChart"
 import { useMemo, useState } from "react"
-import { getRealAmountOfToken } from "@/src/entities/exchanges/token"
-import { CandlesQueryType, useGetCandlesQuery } from "@/src/shared/api/candlesApi/hooks/useCandlesQuery"
+import { getRealAmountOfToken, TokenModel } from "@/src/entities/exchanges/token"
+import { useGetCandlesQuery } from "@/src/shared/api/candlesApi/hooks/useCandlesQuery"
 import { CandleModel } from "@/src/entities/exchanges/candle"
 import { v4 } from "uuid"
 import { handleCopyClick } from "@/src/shared/helpers/clipboard"
@@ -13,40 +13,32 @@ import Link from "next/link"
 import V3PoolSwapGridHeader from "./V3PoolSwapGridHeader"
 import { V3PoolModel } from "@/src/entities/exchanges/v3pool"
 import { formatPrice } from "@/src/shared/helpers/numbers"
+import { TradeModel } from "@/src/entities/trades/trade"
 
 type Props = {
-  pool: V3PoolModel,
-  chainId: number,
-  token0Address: string,
-  token1Address: string,
+  trades: TradeModel,
+  token0: TokenModel,
+  token1: TokenModel,
 }
 
-const getPrice = (chartForToken: number, token0UsdPrice: number, token1UsdPrice: number, amount0Real: number, amount1Real: number) => {
-  const tokenPrice = chartForToken == 0 ?
-    token1UsdPrice * Math.abs(amount1Real / amount0Real) :
-    token0UsdPrice * Math.abs(amount0Real / amount1Real)
+// const getPrice = (chartForToken: number, token0) => {
+//   const tokenPrice = chartForToken == 0 ?
+//     token1UsdPrice * Math.abs(amount1Real / amount0Real) :
+//     token0UsdPrice * Math.abs(amount0Real / amount1Real)
+//
+//   return tokenPrice
+//
+// }
+//
 
-  return tokenPrice
-
-}
-
-const V3PoolSwapsList = ({ pool, chainId, token0Address, token1Address }: Props) => {
+const V3PoolSwapsList = ({ trades, token0, token1 }: Props) => {
   const { swaps, isLoading, error } = useV3SwapSubscription(pool.address, chainId)
-
-  const { token: token0 } = useGetTokenByAddressAndChainID(token0Address, chainId, 10000)
-  const { token: token1 } = useGetTokenByAddressAndChainID(token1Address, chainId, 10000)
 
   const [isChartForToken0, setIsChartForToken0] = useState<boolean>(true)
   const chartForToken = isChartForToken0 ? 0 : 1
   const timeSpacing = 60
 
-  const { candles: candlesQueired } = useGetCandlesQuery({
-    type: CandlesQueryType.V3Pool,
-    address: pool.address,
-    chainId,
-    chartForToken,
-    timeSpacing
-  })
+  const { candles: candlesQueired } = useGetCandlesQuery({ poolAddress: pool.address, chainId, chartForToken, timeSpacing })
 
   const reversedSwaps = useMemo(() => {
     if (!swaps) return [];
@@ -61,7 +53,6 @@ const V3PoolSwapsList = ({ pool, chainId, token0Address, token1Address }: Props)
     if (!candlesQueired) {
       return { candles: [], updatingCandle: null }
     }
-    console.log("candlesQueried: ", candlesQueired)
 
     const candles = [...candlesQueired]
     if (candles.length == 0) {
@@ -134,8 +125,6 @@ const V3PoolSwapsList = ({ pool, chainId, token0Address, token1Address }: Props)
     }
     // console.log("candles:", candles)
     // const leftIndex = Math.max(candles.length - 100, 0)
-    console.log("candles: ", candles)
-
     return { candles: candles, updatingCandle }
   }, [candlesQueired, swaps, token0, token1, chartForToken])
 
@@ -237,3 +226,4 @@ const V3PoolSwapsList = ({ pool, chainId, token0Address, token1Address }: Props)
 }
 
 export default V3PoolSwapsList
+
