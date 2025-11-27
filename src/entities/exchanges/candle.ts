@@ -1,3 +1,5 @@
+import { v4 } from "uuid"
+
 export type CandleData = {
   uuid: string,
   open: number,
@@ -18,7 +20,19 @@ export class CandleModel {
   timestamp: number
   amountSwaps: number
 
-  constructor(candleData: CandleData) {
+  constructor(candleData?: CandleData) {
+    if (candleData === undefined) {
+      this.uuid = v4().toString()
+      this.open = 0
+      this.close = 0
+      this.low = 0
+      this.high = 0
+      this.timestamp = 0
+      this.amountSwaps = 0
+
+      return
+    }
+
     this.uuid = candleData.uuid
     this.open = Number(candleData.open)
     this.close = Number(candleData.close)

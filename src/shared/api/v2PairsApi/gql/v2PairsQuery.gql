@@ -1,0 +1,33 @@
+query GET_V3_POOLS ($where: V2PairWhere, $first: Int!, $skip: Int!) {
+  v2pairs(where: $where, first: $first, skip: $skip) {
+    address
+    token0Address
+    token1Address
+    amount0
+    amount1
+    feeTier
+    chainId
+    isDusty
+
+    exchangeName
+    blockNumber
+
+    zfo_10usdRate
+    nonZfo_10usdRate
+
+    token0 {
+      address
+      symbol
+      usdPrice
+      chainId
+      decimals
+    }
+    token1{ 
+      address
+      usdPrice
+      symbol
+      chainId
+      decimals
+    }
+  }
+}

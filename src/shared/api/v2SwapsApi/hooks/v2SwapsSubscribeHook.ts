@@ -1,26 +1,25 @@
-import { V3SwapData, V3SwapModel } from "@/src/entities/exchanges/v3Swap";
 import { useSubscription } from "@apollo/client/react";
 import { useMemo, useState } from "react";
-import V3SWAP_SUBSCRIPTION from "@/src/shared/api/v3SwapsApi/gql/v3SwapSubscription.gql"
-import { useV3SwapsQuery } from "./v3SwapQuery";
+import V2SWAP_SUBSCRIPTION from "@/src/shared/api/v3SwapsApi/gql/v2SwapSubscription.gql"
+import { useV2SwapsQuery } from "./v2SwapQuery";
+import { V2SwapData, V2SwapModel } from "@/src/entities/exchanges/v2Swap";
 
-type V3SubscriptionData = {
-  swapAdded: V3SwapData,
+type V2SubscriptionData = {
+  swapAdded: V2SwapData,
 }
 
-export const useV3SwapSubscription = (poolAddress: string, chainId: number): {
-  swaps: V3SwapModel[],
+export const useV2SwapSubscription = (pairAddress: string, chainId: number): {
+  swaps: V2SwapModel[],
   isLoading: boolean,
   error: string | null
 } => {
 
   //Order old -> new
-  const [liveSwaps, setLiveSwaps] = useState<V3SwapModel[]>([])
-  console.log("liveSwaps", liveSwaps)
+  const [liveSwaps, setLiveSwaps] = useState<V2SwapModel[]>([])
 
-  const { loading } = useSubscription(V3SWAP_SUBSCRIPTION, {
+  const { loading } = useSubscription(V2SWAP_SUBSCRIPTION, {
     variables: {
-      poolAddress,
+      pairAddress,
       chainId
     },
     onData({ data }) {
@@ -29,14 +28,14 @@ export const useV3SwapSubscription = (poolAddress: string, chainId: number): {
         return
       }
 
-      const subscriptionData = data?.data as V3SubscriptionData
+      const subscriptionData = data?.data as V2SubscriptionData
       if (!subscriptionData) {
         return
       }
 
-      let newSwap: V3SwapModel
+      let newSwap: V2SwapModel
       try {
-        newSwap = new V3SwapModel(subscriptionData.swapAdded)
+        newSwap = new V2SwapModel(subscriptionData.swapAdded)
       } catch (e) {
         console.error("Unable to construct new swap in liveSwaps", e)
         return
@@ -54,11 +53,11 @@ export const useV3SwapSubscription = (poolAddress: string, chainId: number): {
   })
 
   //Order new -> old
-  const { swaps: historySwaps, isLoading: historyIsLoading, error: histoyError } = useV3SwapsQuery({
+  const { swaps: historySwaps, isLoading: historyIsLoading, error: histoyError } = useV2SwapsQuery({
     fromHead: true,
     first: 100,
     skip: 0,
-    poolAddress,
+    pairAddress,
     chainId,
     pollInterval: 100000
   })

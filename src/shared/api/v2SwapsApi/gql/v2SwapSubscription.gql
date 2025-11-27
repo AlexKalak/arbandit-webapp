@@ -1,0 +1,14 @@
+subscription V2SwapSubscription($pairAddress: String!, $chainId: Int!) {
+  swapAdded(pairAddress: $pairAddress, chainId: $chainId) {
+      id
+      chainId
+       pairAddress 
+      amount0
+      amount1
+      archiveToken0UsdPrice
+      archiveToken1UsdPrice
+      txHash
+      txTimestamp
+      blockNumber
+  }
+}

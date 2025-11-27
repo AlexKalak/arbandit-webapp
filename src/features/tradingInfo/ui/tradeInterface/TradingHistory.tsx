@@ -1,8 +1,8 @@
 import { generateMd5Hash } from "@/src/shared/helpers/hash"
 import { TokenModel } from "@/src/entities/exchanges/token"
 import { TradeModel } from "@/src/entities/trades/trade"
-import TradeRecord from "./tradeInterface/TradeRecordd"
-import TradeHistoryGridHeader from "./tradeInterface/TradeHistoryGridHeaderr"
+import TradeRecord from "./TradeRecord"
+import TradeHistoryGridHeader from "./TradeHistoryGridHeader"
 
 type Props = {
   chartForToken: number,

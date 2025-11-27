@@ -1,5 +1,5 @@
 import { useV3SwapSubscription } from "@/src/shared/api/v3SwapsApi/hooks/v3SwapsSubscribeHook"
-import V3PoolSwap from "./V3PoolSwap"
+import V3PoolSwap from "../../tradingInfo/ui/tradeInterface/TradeRecord"
 import { useGetTokenByAddressAndChainID } from "@/src/shared/api/tokensApi/hooks/tokenHooks"
 import { generateMd5Hash } from "@/src/shared/helpers/hash"
 import V3PoolSwapsChart from "./V3PoolSwapsChart"
@@ -10,9 +10,10 @@ import { CandleModel } from "@/src/entities/exchanges/candle"
 import { v4 } from "uuid"
 import { handleCopyClick } from "@/src/shared/helpers/clipboard"
 import Link from "next/link"
-import V3PoolSwapGridHeader from "./V3PoolSwapGridHeader"
+import V3PoolSwapGridHeader from "../../tradingInfo/ui/tradeInterface/TradeHistoryGridHeader"
 import { V3PoolModel } from "@/src/entities/exchanges/v3pool"
 import { formatPrice } from "@/src/shared/helpers/numbers"
+import { getPrice } from "@/src/shared/helpers/trade"
 
 type Props = {
   pool: V3PoolModel,
@@ -21,14 +22,6 @@ type Props = {
   token1Address: string,
 }
 
-const getPrice = (chartForToken: number, token0UsdPrice: number, token1UsdPrice: number, amount0Real: number, amount1Real: number) => {
-  const tokenPrice = chartForToken == 0 ?
-    token1UsdPrice * Math.abs(amount1Real / amount0Real) :
-    token0UsdPrice * Math.abs(amount0Real / amount1Real)
-
-  return tokenPrice
-
-}
 
 const V3PoolSwapsList = ({ pool, chainId, token0Address, token1Address }: Props) => {
   const { swaps, isLoading, error } = useV3SwapSubscription(pool.address, chainId)

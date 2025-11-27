@@ -1,21 +1,22 @@
 import { TokenModel } from "@/src/entities/exchanges/token"
-import { V3SwapModel } from "@/src/entities/exchanges/v3Swap"
+import { TradeModel } from "@/src/entities/trades/trade"
+
 import { getDateTimeFromDate } from "@/src/shared/helpers/time"
 
-const V3PoolSwap = (
+const TradeRecord = (
   {
     forToken,
-    swap,
+    trade,
     token0,
     token1
   }: {
     forToken: number,
-    swap: V3SwapModel,
+    trade: TradeModel,
     token0: TokenModel,
     token1: TokenModel
   }
 ) => {
-  const zfo = (swap?.amount0 ?? 0) > 0
+  const zfo = (trade?.amount0 ?? 0) > 0
   let action
   if (forToken === 0) {
     if (zfo) {
@@ -31,22 +32,21 @@ const V3PoolSwap = (
     }
   }
 
-  if (!(token0.usdPrice && token1.usdPrice && swap.amount0 && swap.amount1 && token0.decimals && token1.decimals)) {
+  if (!(token0.usdPrice && token1.usdPrice && trade.amount0 && trade.amount1 && token0.decimals && token1.decimals)) {
     return <>Invalid token data</>
   }
 
-  const token0RealAmount = swap.amount0 / Math.pow(10, token0.decimals)
-  const token1RealAmount = swap.amount1 / Math.pow(10, token1.decimals)
+  const token0RealAmount = trade.amount0 / Math.pow(10, token0.decimals)
+  const token1RealAmount = trade.amount1 / Math.pow(10, token1.decimals)
 
-  const swapTime = new Date()
-  if (swap.txTimestamp) {
-    swapTime.setTime(swap.txTimestamp * 1000)
+  const tradeTime = new Date()
+  if (trade.timestamp) {
+    tradeTime.setTime(trade.timestamp * 1000)
   }
 
-  const swapTimeString = swap.txTimestamp ? getDateTimeFromDate(swapTime) : "no timestamp"
+  const swapTimeString = trade.timestamp ? getDateTimeFromDate(tradeTime) : "no timestamp"
 
   return <div className="grid grid-cols-6 text-center px-20">
-    <h1>{swap.blockNumber}</h1>
     <h1>{swapTimeString}</h1>
     <h1>
       {
@@ -67,4 +67,4 @@ const V3PoolSwap = (
 
 }
 
-export default V3PoolSwap
+export default TradeRecord

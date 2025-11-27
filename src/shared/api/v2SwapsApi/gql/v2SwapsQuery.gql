@@ -1,0 +1,14 @@
+query V2SwapsQuery($fromHead: Boolean, $first: Int, $skip: Int, $where: V2SwapWhere) {
+  v2swaps(fromHead: $fromHead, first: $first, skip: $skip, where: $where) {
+      id
+      chainId
+      pairAddress
+      amount0
+      amount1
+      archiveToken0UsdPrice
+      archiveToken1UsdPrice
+      txHash
+      txTimestamp
+      blockNumber
+  }
+}

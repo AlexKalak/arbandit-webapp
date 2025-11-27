@@ -4,6 +4,7 @@ import { CandleModel } from '@/src/entities/exchanges/candle';
 import { CandlestickData, CandlestickSeries, ColorType, createChart, IChartApi, ISeriesApi, Time, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useRef, useState } from 'react';
 
+
 function candleModelToCandleStickData(candle: CandleModel): CandlestickData<Time> {
   return {
     time: candle.timestamp as UTCTimestamp,
@@ -32,13 +33,13 @@ interface ChartComponentColor {
 }
 
 interface ChartComponentProps {
-  chartForToken: number,
+  forToken: number,
   candles: CandleModel[],
   updatingCandle: CandleModel | null,
   colors?: ChartComponentColor
 }
 
-export const TradingChart = ({ chartForToken, candles, updatingCandle, colors }: ChartComponentProps) => {
+export const TradingChart = ({ forToken, candles, updatingCandle, colors }: ChartComponentProps) => {
   const {
     backgroundColor = 'black',
     lineColor = '#2962FF',
@@ -109,12 +110,12 @@ export const TradingChart = ({ chartForToken, candles, updatingCandle, colors }:
     seriesRef.current = chart.addSeries(CandlestickSeries, {});
 
     return () => {
-      if (seriesRef.current) {
+      if (seriesRef?.current) {
         chart.removeSeries(seriesRef.current)
       }
     }
 
-  }, [chart, chartForToken])
+  }, [chart, forToken])
 
   useEffect(() => {
     const series = seriesRef.current

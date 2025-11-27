@@ -1,6 +1,6 @@
 'use client'
 
-import V3PoolPage from "@/src/features/v3pool/ui/V3PoolPage"
+import V3PoolPage from "@/src/features/tradingInfo/ui/v3pools/V3PoolPage"
 import { useParams } from "next/navigation"
 
 const PoolPage = () => {
@@ -11,7 +11,7 @@ const PoolPage = () => {
       {
         //FIX: chainId
       }
-      <V3PoolPage address={address} chainId={1} />
+      <V3PoolPage address={address} chainID={1} />
     </div>
   )
 

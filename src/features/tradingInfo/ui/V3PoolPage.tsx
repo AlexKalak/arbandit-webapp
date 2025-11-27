@@ -1,5 +1,5 @@
-import V3PoolInfo from "../../v3pool/ui/V3PoolInfo"
-import V3PoolSwapsList from "../../v3pool/ui/V3PoolSwapList"
+import V3PoolInfo from "../../../v3pool/ui/V3PoolInfo"
+import V3PoolSwapsList from "../../../v3pool/ui/V3PoolSwapList"
 import { useGetV3PoolQuery } from "@/src/shared/api/v3PoolsApi/hooks/v3PoolsApiHooks"
 
 const V3PoolPage = ({ address, chainID }: { address: string, chainID: number }) => {
